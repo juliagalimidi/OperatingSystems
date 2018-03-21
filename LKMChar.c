@@ -17,7 +17,7 @@
 #include <linux/fs.h>             // Header for the Linux file system support
 #include <linux/uaccess.h>          // Required for the copy to user function
 #define  DEVICE_NAME "LKMChar"    ///< The device will appear at /dev/LKMChar using this value
-#define  CLASS_NAME  "ebb"        ///< The device class -- this is a character device driver
+#define  CLASS_NAME  "LKM"        ///< The device class -- this is a character device driver
  
 MODULE_LICENSE("GPL");            ///< The license type -- this affects available functionality
 MODULE_AUTHOR("Jamison Rayfield, Julia Galimidi");    ///< The author -- visible when you use modinfo
