@@ -13,7 +13,7 @@
 #define  CLASS_NAME  "LKM"        ///< The device class -- this is a character device driver
  
 MODULE_LICENSE("GPL");            ///< The license type -- this affects available functionality
-MODULE_AUTHOR("Jamison Rayfield, Julia Galimidi");    ///< The author -- visible when you use modinfo
+MODULE_AUTHOR("Jamison Rayfield, Julia Galimidi, Brooke Cochenour");    ///< The author -- visible when you use modinfo
 MODULE_DESCRIPTION("A simple Linux char driver");  ///< The description -- see modinfo
 MODULE_VERSION("0.1");            ///< A version number to inform users
  
