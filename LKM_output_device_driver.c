@@ -12,7 +12,7 @@
 #include <linux/kernel.h>         // Contains types, macros, functions for the kernel
 #include <linux/fs.h>             // Header for the Linux file system support
 #include <linux/uaccess.h>          // Required for the copy to user function
-#define  DEVICE_NAME "LKM_output_device_driver.c"    ///< The device will appear at /dev/LKM_output_device_driver using this value
+#define  DEVICE_NAME "LKM_output_device_driver"    ///< The device will appear at /dev/LKM_output_device_driver using this value
 #define  CLASS_NAME  "LKM_output"        ///< The device class -- this is a character device driver
 
 MODULE_LICENSE("GPL");            ///< The license type -- this affects available functionality
@@ -24,7 +24,7 @@ MODULE_VERSION("0.1");            ///< A version number to inform users
 extern char *buffer;
 
 static int    majorNumber;                  ///< Stores the device number -- determined automatically
-extern static char   message[256] = {0};           ///< Memory for the string that is passed from userspace
+static char   message[256] = {0};           ///< Memory for the string that is passed from userspace
 static short  size_of_message;              ///< Used to remember the size of the string stored
 static int    numberOpens = 0;              ///< Counts the number of times the device is opened
 static struct class*  LKM_output_class  = NULL; ///< The device-driver class struct pointer
@@ -34,7 +34,7 @@ static struct device* LKM_output_Device = NULL; ///< The device-driver device st
 static int     dev_open(struct inode *, struct file *);
 static int     dev_release(struct inode *, struct file *);
 static ssize_t dev_read(struct file *, char *, size_t, loff_t *);
-static ssize_t dev_write(struct file *, const char *, size_t, loff_t *);
+//static ssize_t dev_write(struct file *, const char *, size_t, loff_t *);
 
 /** @brief Devices are represented as file structure in the kernel. The file_operations structure from
  *  /linux/fs.h lists the callback functions that you wish to associated with your file operations
@@ -44,7 +44,7 @@ static struct file_operations fops =
 {
     .open = dev_open,
     .read = dev_read,
-    .write = dev_write,
+    //.write = dev_write,
     .release = dev_release,
 };
 
@@ -109,11 +109,11 @@ static int dev_open(struct inode *inodep, struct file *filep){
     return 0;
 }
 
-/* As I can tell, the LKM output driver will use the dev_read driver.  It will need to receive the buffer from the dev_write function which will be contained in our LKM input module.  Looks like it may be step one to call EXPORT_SYMBOL(buffer) in each module, and make sure that the buffer is adefined as a global buffer?
 
 
 
-/** THIS NEED TO BE THE OUTPUT MODULE.
+
+/* THIS NEED TO BE THE OUTPUT MODULE.
  *  @brief This function is called whenever device is being read from user space i.e. data is
  *  being sent from the device to the user. In this case is uses the copy_to_user() function to
  *  send the buffer string to the user and captures any errors.
@@ -137,7 +137,7 @@ static ssize_t dev_read(struct file *filep, char *buffer, size_t len, loff_t *of
     }
 }
 
-/**  This needs to be the LKM input module.
+/*  This needs to be the LKM input module.
  
  *@brief This function is called whenever the device is being written to from user space i.e.
  *  data is sent to the device from the user. The data is copied to the message[] array in this
@@ -156,7 +156,7 @@ static ssize_t dev_write(struct file *filep, const char *buffer, size_t len, lof
     return len;
 }
 
-/** @brief The device release function that is called whenever the device is closed/released by
+/* @brief The device release function that is called whenever the device is closed/released by
  *  the userspace program
  *  @param inodep A pointer to an inode object (defined in linux/fs.h)
  *  @param filep A pointer to a file object (defined in linux/fs.h)

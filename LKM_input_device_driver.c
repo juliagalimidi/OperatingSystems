@@ -13,7 +13,8 @@
 #include <linux/kernel.h>         // Contains types, macros, functions for the kernel
 #include <linux/fs.h>             // Header for the Linux file system support
 #include <linux/uaccess.h>          // Required for the copy to user function
-#define  DEVICE_NAME "LKM_input_device_driver.c"    ///< The device will appear at /dev/LKM_input_device_driver using this value
+#include <linux/export.h>	//used for driving EXPORT SYMBOL
+#define  DEVICE_NAME "LKM_input_device_driver"    ///< The device will appear at /dev/LKM_input_device_driver using this value
 #define  CLASS_NAME  "LKM_input"        ///< The device class -- this is a character device driver
 
 MODULE_LICENSE("GPL");            ///< The license type -- this affects available functionality
@@ -22,11 +23,11 @@ MODULE_DESCRIPTION("A simple Linux char driver");  ///< The description -- see m
 MODULE_VERSION("0.1");            ///< A version number to inform users
 
 //Reading that the variable you want to be available to other modules needs to be defined as a extern type
-extern char *buffer;
-
+char *buffer;
+EXPORT_SYMBOL(buffer);
 
 static int    majorNumber;                  ///< Stores the device number -- determined automatically
-extern static char   message[256] = {0};           ///< Memory for the string that is passed from userspace
+static char   message[256] = {0};           ///< Memory for the string that is passed from userspace
 static short  size_of_message;              ///< Used to remember the size of the string stored
 static int    numberOpens = 0;              ///< Counts the number of times the device is opened
 static struct class*  LKM_input_class  = NULL; ///< The device-driver class struct pointer
@@ -35,8 +36,8 @@ static struct device* LKM_input_Device = NULL; ///< The device-driver device str
 // The prototype functions for the character driver -- must come before the struct definition
 static int     dev_open(struct inode *, struct file *);
 static int     dev_release(struct inode *, struct file *);
-static ssize_t dev_read(struct file *, char *, size_t, loff_t *);
-static ssize_t dev_write(struct file *, const char *, size_t, loff_t *);
+//static ssize_t dev_read(struct file *, char *, size_t, loff_t *);
+static ssize_t dev_write(struct file *,  char *, size_t, loff_t *);
 
 /** @brief Devices are represented as file structure in the kernel. The file_operations structure from
  *  /linux/fs.h lists the callback functions that you wish to associated with your file operations
@@ -45,7 +46,7 @@ static ssize_t dev_write(struct file *, const char *, size_t, loff_t *);
 static struct file_operations fops =
 {
     .open = dev_open,
-    .read = dev_read,
+    //.read = dev_read,
     .write = dev_write,
     .release = dev_release,
 };
@@ -112,7 +113,7 @@ static int dev_open(struct inode *inodep, struct file *filep){
 }
 
 /*
-/** THIS NEED TO BE THE OUTPUT MODULE.
+ * THIS NEED TO BE THE OUTPUT MODULE.
  *  @brief This function is called whenever device is being read from user space i.e. data is
  *  being sent from the device to the user. In this case is uses the copy_to_user() function to
  *  send the buffer string to the user and captures any errors.
@@ -145,12 +146,12 @@ static ssize_t dev_read(struct file *filep, char *buffer, size_t len, loff_t *of
  *  @param len The length of the array of data that is being passed in the const char buffer
  *  @param offset The offset if required
  */
-static ssize_t dev_write(struct file *filep, char *buffer, size_t len, loff_t *offset){
+static ssize_t dev_write(struct file *filep,  char *buffer, size_t len, loff_t *offset){
     sprintf(message, "%s(%zu letters)", buffer, len);   // appending received string with its length
     size_of_message = strlen(message);                 // store the length of the stored message
     printk(KERN_INFO "LKM_input_device_driver: Received %zu characters from the user\n", len);
     //need to export the buffer
-    EXPORT_SYMBOL(buffer);
+    
     return len;
 }
 
