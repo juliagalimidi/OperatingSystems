@@ -21,7 +21,7 @@ MODULE_LICENSE("GPL");            ///< The license type -- this affects availabl
 MODULE_AUTHOR("Jamison Rayfield, Julia Galimidi");    ///< The author -- visible when you use modinfo
 MODULE_DESCRIPTION("A simple Linux char driver");  ///< The description -- see modinfo
 MODULE_VERSION("0.1");            ///< A version number to inform users
-
+/*This global variable is being properly made visible to other kernel modules.*/
 int GLOBAL_VARIABLE = 1000;
 
 EXPORT_SYMBOL(GLOBAL_VARIABLE);
