@@ -20,11 +20,13 @@ MODULE_AUTHOR("Jamison Rayfield, Julia Galimidi");    ///< The author -- visible
 MODULE_DESCRIPTION("A simple Linux char driver");  ///< The description -- see modinfo
 MODULE_VERSION("0.1");            ///< A version number to inform users
 
+extern int GLOBAL_VARIABLE;
 //this is making the buffer available across the modules
 extern char *buffer;
 
 static int    majorNumber;                  ///< Stores the device number -- determined automatically
-static char   message[256] = {0};           ///< Memory for the string that is passed from userspace
+//added "extern" to the message variable and removed static keyword
+extern char   message[256] = {0};           ///< Memory for the string that is passed from userspace
 static short  size_of_message;              ///< Used to remember the size of the string stored
 static int    numberOpens = 0;              ///< Counts the number of times the device is opened
 static struct class*  LKM_output_class  = NULL; ///< The device-driver class struct pointer
@@ -57,6 +59,9 @@ static struct file_operations fops =
 static int __init LKM_output_device_driver_init(void){
     printk(KERN_INFO "LKM_output_device_driver: Initializing the LKM_output_device_driver LKM\n");
     
+    //See if the buffer is there
+    printk(KERN_INFO "LKM_output_device_driver: Buffer contains: %s\n", buffer);
+    printk(KERN_INFO "LKM_output_device_driver: Message contains: %s\n", message);
     // Try to dynamically allocate a major number for the device -- more difficult but worth it
     majorNumber = register_chrdev(0, DEVICE_NAME, &fops);
     if (majorNumber<0){
@@ -124,8 +129,13 @@ static int dev_open(struct inode *inodep, struct file *filep){
  */
 static ssize_t dev_read(struct file *filep, char *buffer, size_t len, loff_t *offset){
     int error_count = 0;
+
+    printk(KERN_INFO "LKM_output_device_driver: Buffer passed to dev_read is %s\n", buffer);
+    printk(KERN_INFO "LKM_output_device_driver: Message pass to dev_read is %s\n", message);
+    printk(KERN_INFO "global variable value is %d\n", GLOBAL_VARIABLE);
     // copy_to_user has the format ( * to, *from, size) and returns 0 on success
     error_count = copy_to_user(buffer, message, size_of_message);
+
     
     if (error_count==0){            // if true then have success
         printk(KERN_INFO "LKM_output_device_driver: Sent %d characters to the user\n", size_of_message);
