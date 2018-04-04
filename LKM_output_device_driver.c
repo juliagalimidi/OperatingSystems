@@ -19,7 +19,7 @@ MODULE_LICENSE("GPL");            ///< The license type -- this affects availabl
 MODULE_AUTHOR("Jamison Rayfield, Julia Galimidi");    ///< The author -- visible when you use modinfo
 MODULE_DESCRIPTION("A simple Linux char driver");  ///< The description -- see modinfo
 MODULE_VERSION("0.1");            ///< A version number to inform users
-
+//Global Variable is working
 extern int GLOBAL_VARIABLE;
 //this is making the buffer available across the modules
 extern char *buffer;
