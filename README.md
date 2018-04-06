@@ -13,9 +13,9 @@ gcc -o test	LKM_tester.c		Compile the test program
 
 sudo ./test						Run the test program, it will ask you for input
 
-sudo rmmod LKM_input_device_driver 				::  remove the kernel module
-
 sudo rmmod LKM_output_device_driver 				::  remove the kernel module
+
+sudo rmmod LKM_input_device_driver 				::  remove the kernel module
 
 dmesg			:: View what's happening in the Kernel, this where we should see all the printk statements in the kernel modules
 lsmod		:: See the list of kernel modules that are loaded

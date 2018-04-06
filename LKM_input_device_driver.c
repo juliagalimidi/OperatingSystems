@@ -95,6 +95,7 @@ static int __init LKM_input_device_driver_init(void){
         return PTR_ERR(LKM_input_Device);
     }
     printk(KERN_INFO "LKM_input_device_driver: device class created correctly\n"); // Made it! device was initialized
+	mutex_init(&mutexLock);
     return 0;
 }
 
@@ -103,7 +104,8 @@ static int __init LKM_input_device_driver_init(void){
  *  code is used for a built-in driver (not a LKM) that this function is not required.
  */
 static void __exit LKM_input_device_driver_exit(void){
-    device_destroy(LKM_input_class, MKDEV(majorNumber, 0));     // remove the device
+    mutex_destroy(&mutexLock);
+	device_destroy(LKM_input_class, MKDEV(majorNumber, 0));     // remove the device
     class_unregister(LKM_input_class);                          // unregister the device class
     class_destroy(LKM_input_class);                             // remove the device class
     unregister_chrdev(majorNumber, DEVICE_NAME);             // unregister the major number
@@ -116,7 +118,13 @@ static void __exit LKM_input_device_driver_exit(void){
  *  @param filep A pointer to a file object (defined in linux/fs.h)
  */
 static int dev_open(struct inode *inodep, struct file *filep){
-    numberOpens++;
+    if(!mutex_trylock(&mutexLock))
+	{
+		printk(KERN_INFO "Lock in use.");
+		return -EBUSY;
+		
+	}
+	numberOpens++;
     printk(KERN_INFO "LKM_input_device_driver: Device has been opened %d time(s)\n", numberOpens);
     return 0;
 }
@@ -173,7 +181,8 @@ static ssize_t dev_write(struct file *filep,  char *buffer, size_t len, loff_t *
  *  @param filep A pointer to a file object (defined in linux/fs.h)
  */
 static int dev_release(struct inode *inodep, struct file *filep){
-    printk(KERN_INFO "LKM_input_device_driver: Device successfully closed\n");
+    mutex_unlock(&mutexLock);
+	printk(KERN_INFO "LKM_input_device_driver: Device successfully closed\n");
     return 0;
 }
 
