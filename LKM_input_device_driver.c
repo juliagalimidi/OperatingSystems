@@ -14,6 +14,7 @@
 #include <linux/fs.h>             // Header for the Linux file system support
 #include <linux/uaccess.h>          // Required for the copy to user function
 #include <linux/export.h>	//used for driving EXPORT SYMBOL
+#include <linux/mutex.h>
 #define  DEVICE_NAME "LKM_input_device_driver"    ///< The device will appear at /dev/LKM_input_device_driver using this value
 #define  CLASS_NAME  "LKM_input"        ///< The device class -- this is a character device driver
 

@@ -9,6 +9,7 @@
 #include <linux/kernel.h>         // Contains types, macros, functions for the kernel
 #include <linux/fs.h>             // Header for the Linux file system support
 #include <linux/uaccess.h>          // Required for the copy to user function
+#include <linux/mutex.h>
 #define  DEVICE_NAME "LKMChar"    ///< The device will appear at /dev/LKMChar using this value
 #define  CLASS_NAME  "LKM"        ///< The device class -- this is a character device driver
  
