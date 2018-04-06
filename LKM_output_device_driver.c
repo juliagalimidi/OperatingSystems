@@ -22,7 +22,7 @@ MODULE_AUTHOR("Jamison Rayfield, Julia Galimidi");    ///< The author -- visible
 MODULE_DESCRIPTION("A simple Linux char driver");  ///< The description -- see modinfo
 MODULE_VERSION("0.1");            ///< A version number to inform users
 //Global Variable is working
-extern int GLOBAL_VARIABLE;
+extern char *GLOBAL_VARIABLE;
 //this is making the buffer available across the modules
 extern char buffer[1024];
 
@@ -134,7 +134,7 @@ static ssize_t dev_read(struct file *filep, char *buffer, size_t len, loff_t *of
 
     printk(KERN_INFO "LKM_output_device_driver: Buffer passed to dev_read is %s\n", buffer);
     printk(KERN_INFO "LKM_output_device_driver: Message pass to dev_read is %s\n", message);
-    printk(KERN_INFO "global variable value is %d\n", GLOBAL_VARIABLE);
+    printk(KERN_INFO "global variable value is %s\n", GLOBAL_VARIABLE);
     // copy_to_user has the format ( * to, *from, size) and returns 0 on success
     error_count = copy_to_user(buffer, message, size_of_message);
 
