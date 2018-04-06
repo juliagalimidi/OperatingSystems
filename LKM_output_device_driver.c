@@ -131,14 +131,12 @@ static int dev_open(struct inode *inodep, struct file *filep){
  */
 static ssize_t dev_read(struct file *filep, char *buffer1, size_t len, loff_t *offset){
     int error_count = 0;
-
+    size_of_message = strlen(message);
     printk(KERN_INFO "LKM_output_device_driver: Buffer passed to dev_read is %s\n", buffer);
     printk(KERN_INFO "LKM_output_device_driver: Message pass to dev_read is %s\n", message);
-    printk(KERN_INFO "LKM_output_device_driver: Buffer1 passed to dev_read is %s\n", buffer1);
-   // printk(KERN_INFO "BUFFER 1 IN OUTPUT is %s\n", buffer1");
-    //printk(KERN_INFO "global variable value is %s\n", GLOBAL_VARIABLE);
+   
     // copy_to_user has the format ( * to, *from, size) and returns 0 on success
-    error_count = copy_to_user(buffer, message, size_of_message);
+    error_count = copy_to_user(buffer1, message, size_of_message);
 
     
     if (error_count==0){            // if true then have success

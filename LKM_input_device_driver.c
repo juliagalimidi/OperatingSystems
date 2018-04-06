@@ -170,7 +170,6 @@ static ssize_t dev_write(struct file *filep,  char *buffer1, size_t len, loff_t 
    // buffer = message;
     printk(KERN_INFO "LKM_input_device_driver: Message is %s\n", message);
     printk(KERN_INFO "LKM_input_device_driver: Buffer is %s\n", buffer);
-    printk(KERN_INFO "BUFFER 1 IS %s\n", buffer1);  
  return len;
 }
 

@@ -39,6 +39,8 @@ int main(){
       perror("Failed to read the message from the device.");
       return errno;
    }
+
+   printf("RET: %d\n", ret);
    printf("The received message is: [%s]\n", receive);
    printf("End of the program\n");
    return 0;
