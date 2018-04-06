@@ -1,3 +1,4 @@
+
 //
 //  LKM_input_device_driver.c
 //  
@@ -23,18 +24,16 @@ MODULE_AUTHOR("Jamison Rayfield, Julia Galimidi");    ///< The author -- visible
 MODULE_DESCRIPTION("A simple Linux char driver");  ///< The description -- see modinfo
 MODULE_VERSION("0.1");            ///< A version number to inform users
 /*This global variable is being properly made visible to other kernel modules.*/
-char *GLOBAL_VARIABLE = "test";
+char *GLOBAL_VARIABLE;
 static DEFINE_MUTEX(mutexLock);
 EXPORT_SYMBOL(GLOBAL_VARIABLE);
 //Reading that the variable you want to be available to other modules needs to be defined as a extern type
-char buffer[1024];
+char *buffer;
 EXPORT_SYMBOL(buffer);
-
 
 static int majorNumber;                  ///< Stores the device number -- determined automatically
 //message was originally a static char, compiler throwing an error of conflicting types
-char   message[256] = {0};           ///< Memory for the string that is passed from userspace
-//trying to add message as an export symbol
+char   message[256] = {0};           ///< Memory for the string that is passed from userspace//trying to add message as an export symbol
 EXPORT_SYMBOL(message);
 
 static short  size_of_message;              ///< Used to remember the size of the string stored
@@ -168,10 +167,9 @@ static ssize_t dev_write(struct file *filep,  char *buffer, size_t len, loff_t *
     size_of_message = strlen(message);                 // store the length of the stored message
     printk(KERN_INFO "LKM_input_device_driver: Received %zu characters from the user\n", len);
     //need to export the buffer
+    GLOBAL_VARIABLE = "test";
     printk(KERN_INFO "LKM_input_device_driver: Message is %s\n", message);
     printk(KERN_INFO "LKM_input_device_driver: Buffer is %s\n", buffer);
-    
-    
     return len;
 }
 
