@@ -24,14 +24,14 @@ MODULE_DESCRIPTION("A simple Linux char driver");  ///< The description -- see m
 MODULE_VERSION("0.1");            ///< A version number to inform users
 /*This global variable is being properly made visible to other kernel modules.*/
 int GLOBAL_VARIABLE = 1000;
-
+static DEFINE_MUTEX(mutexLock);
 EXPORT_SYMBOL(GLOBAL_VARIABLE);
 //Reading that the variable you want to be available to other modules needs to be defined as a extern type
 char buffer[1024];
 EXPORT_SYMBOL(buffer);
 
 
-static int    majorNumber;                  ///< Stores the device number -- determined automatically
+static int majorNumber;                  ///< Stores the device number -- determined automatically
 //message was originally a static char, compiler throwing an error of conflicting types
 char   message[256] = {0};           ///< Memory for the string that is passed from userspace
 //trying to add message as an export symbol
