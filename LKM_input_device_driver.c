@@ -27,7 +27,7 @@ int GLOBAL_VARIABLE = 1000;
 
 EXPORT_SYMBOL(GLOBAL_VARIABLE);
 //Reading that the variable you want to be available to other modules needs to be defined as a extern type
-char *buffer;
+char buffer[1024];
 EXPORT_SYMBOL(buffer);
 
 

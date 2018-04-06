@@ -24,7 +24,7 @@ MODULE_VERSION("0.1");            ///< A version number to inform users
 //Global Variable is working
 extern int GLOBAL_VARIABLE;
 //this is making the buffer available across the modules
-extern char *buffer;
+extern char buffer[1024];
 
 static int    majorNumber;                  ///< Stores the device number -- determined automatically
 //added "extern" to the message variable and removed static keyword
