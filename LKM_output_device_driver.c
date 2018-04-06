@@ -22,13 +22,13 @@ MODULE_AUTHOR("Jamison Rayfield, Julia Galimidi");    ///< The author -- visible
 MODULE_DESCRIPTION("A simple Linux char driver");  ///< The description -- see modinfo
 MODULE_VERSION("0.1");            ///< A version number to inform users
 //Global Variable is working
-extern char *GLOBAL_VARIABLE;
+//extern char *GLOBAL_VARIABLE;
 //this is making the buffer available across the modules
 extern char *buffer;
 
 static int    majorNumber;                  ///< Stores the device number -- determined automatically
 //added "extern" to the message variable and removed static keyword
-extern char   message[256] = {0};           ///< Memory for the string that is passed from userspace
+extern char   message[256];           ///< Memory for the string that is passed from userspace
 static short  size_of_message;              ///< Used to remember the size of the string stored
 static int    numberOpens = 0;              ///< Counts the number of times the device is opened
 static struct class*  LKM_output_class  = NULL; ///< The device-driver class struct pointer
@@ -129,12 +129,14 @@ static int dev_open(struct inode *inodep, struct file *filep){
  *  @param len The length of the b
  *  @param offset The offset if required
  */
-static ssize_t dev_read(struct file *filep, char *buffer, size_t len, loff_t *offset){
+static ssize_t dev_read(struct file *filep, char *buffer1, size_t len, loff_t *offset){
     int error_count = 0;
 
     printk(KERN_INFO "LKM_output_device_driver: Buffer passed to dev_read is %s\n", buffer);
     printk(KERN_INFO "LKM_output_device_driver: Message pass to dev_read is %s\n", message);
-    printk(KERN_INFO "global variable value is %s\n", GLOBAL_VARIABLE);
+    printk(KERN_INFO "LKM_output_device_driver: Buffer1 passed to dev_read is %s\n", buffer1);
+   // printk(KERN_INFO "BUFFER 1 IN OUTPUT is %s\n", buffer1");
+    //printk(KERN_INFO "global variable value is %s\n", GLOBAL_VARIABLE);
     // copy_to_user has the format ( * to, *from, size) and returns 0 on success
     error_count = copy_to_user(buffer, message, size_of_message);
 
@@ -155,6 +157,7 @@ static ssize_t dev_read(struct file *filep, char *buffer, size_t len, loff_t *of
  *  data is sent to the device from the user. The data is copied to the message[] array in this
  *  LKM using the sprintf() function along with the length of the string.
  *  @param filep A pointer to a file object
+    printk(KERN_INFO "LKM_output_device_driver: Buffer passed to dev_read is %s\n", buffer);
  *  @param buffer The buffer to that contains the string to write to the device
  *  @param len The length of the array of data that is being passed in the const char buffer
  *  @param offset The offset if required

@@ -7,7 +7,6 @@
 //
 
 
-
 #include <linux/init.h>           // Macros used to mark up functions e.g. __init __exit
 #include <linux/module.h>         // Core header for loading LKMs into the kernel
 #include <linux/device.h>         // Header to support the kernel Driver Model
@@ -24,12 +23,12 @@ MODULE_AUTHOR("Jamison Rayfield, Julia Galimidi");    ///< The author -- visible
 MODULE_DESCRIPTION("A simple Linux char driver");  ///< The description -- see modinfo
 MODULE_VERSION("0.1");            ///< A version number to inform users
 /*This global variable is being properly made visible to other kernel modules.*/
-char *GLOBAL_VARIABLE;
-static DEFINE_MUTEX(mutexLock);
-EXPORT_SYMBOL(GLOBAL_VARIABLE);
-//Reading that the variable you want to be available to other modules needs to be defined as a extern type
 char *buffer;
+static DEFINE_MUTEX(mutexLock);
 EXPORT_SYMBOL(buffer);
+//Reading that the variable you want to be available to other modules needs to be defined as a extern type
+//char *buffer;
+//EXPORT_SYMBOL(buffer);
 
 static int majorNumber;                  ///< Stores the device number -- determined automatically
 //message was originally a static char, compiler throwing an error of conflicting types
@@ -162,15 +161,17 @@ static ssize_t dev_read(struct file *filep, char *buffer, size_t len, loff_t *of
  *  @param len The length of the array of data that is being passed in the const char buffer
  *  @param offset The offset if required
  */
-static ssize_t dev_write(struct file *filep,  char *buffer, size_t len, loff_t *offset){
-    sprintf(message, "%s(%zu letters)", buffer, len);   // appending received string with its length
-    size_of_message = strlen(message);                 // store the length of the stored message
-    printk(KERN_INFO "LKM_input_device_driver: Received %zu characters from the user\n", len);
+static ssize_t dev_write(struct file *filep,  char *buffer1, size_t len, loff_t *offset){
+     sprintf(message, "%s(%zu letters)", buffer1, len);   // appending received string with its length
+     buffer = message;
+     size_of_message = strlen(message);                 // store the length of the stored message
+     printk(KERN_INFO "LKM_input_device_driver: Received %zu characters from the user\n", len);
     //need to export the buffer
-    GLOBAL_VARIABLE = "test";
+   // buffer = message;
     printk(KERN_INFO "LKM_input_device_driver: Message is %s\n", message);
     printk(KERN_INFO "LKM_input_device_driver: Buffer is %s\n", buffer);
-    return len;
+    printk(KERN_INFO "BUFFER 1 IS %s\n", buffer1);  
+ return len;
 }
 
 /** @brief The device release function that is called whenever the device is closed/released by
