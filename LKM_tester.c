@@ -23,18 +23,65 @@ int main(){
    }
    printf("Type in a short string to send to the kernel module:\n");
    scanf("%[^\n]%*c", stringToSend);                // Read in a string (with spaces)
-  // check for UCF
+  
+    // check for UCF
    char *temp = strstr(stringToSend, "UCF");
-   int position;  
-   char *result = "";
-    if(temp != NULL)
+	printf("UCF found? : %s \n", temp);    
+    int position;  
+    char *result = "";
+     // If UCF is in the string
+     if(temp != NULL)
      {
-        printf("UCF found");
-        position = temp - stringToSend;
-       int i;
+        // Caluclate where UCF begins
+        position = temp - stringToSend; 
+	// Index where first string ends
+        int  posStart = position; 
+        // Index where last string starts
+        int  posEnd = posStart + 3;
+ 
+        // INSERT TEST TO MAKE SURE POSEND ISNT PAST END
+        printf("posStart = %d, postEnd = %d\n", posStart, posEnd);
+        printf("past position, pos = %d \n", position);
+	fflush(stdout);
+
+        // Get string before UCF
+        char startStr[strlen(stringToSend) + 38];
+        memset(startStr, '\0', sizeof(startStr));
+        strncpy(startStr, stringToSend + 0, posStart);
+        printf(" PRINTING START HERE : %s\n", startStr);
+char* endTest = stringToSend + posEnd;
+printf("END STRING: %s\n", endTest);
+	// Add start string to result
+/*	strcat(result, startStr);
+        char endStr[strlen(stringToSend) + 38];
+        memset(endStr, '\0', sizeof(endStr));
+       
+        // Get length of string remaining after UCF
+        int N = strlen(stringToSend) - ( strlen(result) + 3 );
+        // Get end of string after UCF
+        strncpy(endStr, stringToSend + posEnd, N );
+        printf(" PRINTING END HERE : %s\n", endStr); 
+        fflush(stdout);
+  */ 
+// char *start = "";
+//strncpy(start, stringToSend + 4, strlen(stringToSend));
+       //strncpy(start, stringToSend + 0, posStart);
+// printf("first half: %s\n", start);//
+fflush(stdout); 
+     char *end = "";
+}
+//      strncpy(end, stringToSend + posEnd, strlen(stringToSend) - 1);
+//      printf("first half: %s\n", start);
+//     printf("last half : %s\n", end);
+/*	 int i;
+       printf("AT FOR LOOP\n");
        for(i = 0; i < position; i++)
        {
-          strcat(result, stringToSend[i]);
+	 printf("IN FIRST LOOP i = %d\n", i);
+fflush(stdout);          
+strcat(result, stringToSend[i]);
+printf("strcat completed\n");
+fflush(stdout);
        }
 
       strcat(result, "Undefeated 2018 National Champions UCF");
@@ -43,8 +90,12 @@ int main(){
       {
           strcat(result, stringToSend[i]);
       }
-       strcpy(stringToSend,result);  
-     }
+       strcpy(stringToSend,result);
+*/  
+     // strcpy(stringToSend, "Undefeated 2017 National Campions UCF");
+    // char* test = strncpy(stringToSend, stringToSend + 0, position  - 0);
+//strcpy(stringToSend, test); 
+    // }
 
  
 
