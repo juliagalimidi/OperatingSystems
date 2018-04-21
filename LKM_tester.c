@@ -26,9 +26,8 @@ int main(){
   
     // check for UCF
    char *temp = strstr(stringToSend, "UCF");
-	printf("UCF found? : %s \n", temp);    
     int position;  
-    char *result = "";
+    char result[strlen(stringToSend) + 40];
      // If UCF is in the string
      if(temp != NULL)
      {
@@ -39,22 +38,16 @@ int main(){
         // Index where last string starts
         int  posEnd = posStart + 3;
  
-        // INSERT TEST TO MAKE SURE POSEND ISNT PAST END
-        printf("posStart = %d, postEnd = %d\n", posStart, posEnd);
-        printf("past position, pos = %d \n", position);
-	fflush(stdout);
-
         // Get string before UCF
         char startStr[strlen(stringToSend) + 38];
         memset(startStr, '\0', sizeof(startStr));
         strncpy(startStr, stringToSend + 0, posStart);
-         printf(" PRINTING START HERE : %s\n", startStr);
         char* endTest = stringToSend + posEnd; 
-printf("END STRING: %s\n", endTest);
+       strcat(result, startStr);
        strcat(result, "Undefeated 2018 National Campions UCF");
        strcat(result, endTest);
        printf("RESULT : %s\n", result);
-
+       strcpy(stringToSend, result);
 
 }
 //      strncpy(end, stringToSend + posEnd, strlen(stringToSend) - 1);
