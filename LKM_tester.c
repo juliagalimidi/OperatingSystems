@@ -48,27 +48,14 @@ int main(){
         char startStr[strlen(stringToSend) + 38];
         memset(startStr, '\0', sizeof(startStr));
         strncpy(startStr, stringToSend + 0, posStart);
-        printf(" PRINTING START HERE : %s\n", startStr);
-char* endTest = stringToSend + posEnd;
+         printf(" PRINTING START HERE : %s\n", startStr);
+        char* endTest = stringToSend + posEnd; 
 printf("END STRING: %s\n", endTest);
-	// Add start string to result
-/*	strcat(result, startStr);
-        char endStr[strlen(stringToSend) + 38];
-        memset(endStr, '\0', sizeof(endStr));
-       
-        // Get length of string remaining after UCF
-        int N = strlen(stringToSend) - ( strlen(result) + 3 );
-        // Get end of string after UCF
-        strncpy(endStr, stringToSend + posEnd, N );
-        printf(" PRINTING END HERE : %s\n", endStr); 
-        fflush(stdout);
-  */ 
-// char *start = "";
-//strncpy(start, stringToSend + 4, strlen(stringToSend));
-       //strncpy(start, stringToSend + 0, posStart);
-// printf("first half: %s\n", start);//
-fflush(stdout); 
-     char *end = "";
+       strcat(result, "Undefeated 2018 National Campions UCF");
+       strcat(result, endTest);
+       printf("RESULT : %s\n", result);
+
+
 }
 //      strncpy(end, stringToSend + posEnd, strlen(stringToSend) - 1);
 //      printf("first half: %s\n", start);
