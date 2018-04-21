@@ -29,6 +29,7 @@ int main(){
    char *result = "";
     if(temp != NULL)
      {
+        printf("UCF found");
         position = temp - stringToSend;
        int i;
        for(i = 0; i < position; i++)
