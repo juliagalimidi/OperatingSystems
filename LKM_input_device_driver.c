@@ -15,11 +15,12 @@
 #include <linux/uaccess.h>          // Required for the copy to user function
 #include <linux/export.h>	//used for driving EXPORT SYMBOL
 #include <linux/mutex.h>
+
 #define  DEVICE_NAME "LKM_input_device_driver"    ///< The device will appear at /dev/LKM_input_device_driver using this value
 #define  CLASS_NAME  "LKM_input"        ///< The device class -- this is a character device driver
 
 MODULE_LICENSE("GPL");            ///< The license type -- this affects available functionality
-MODULE_AUTHOR("Jamison Rayfield, Julia Galimidi");    ///< The author -- visible when you use modinfo
+MODULE_AUTHOR("Jamison Rayfield, Julia Galimidi, Brooke Cochenour");    ///< The author -- visible when you use modinfo
 MODULE_DESCRIPTION("A simple Linux char driver");  ///< The description -- see modinfo
 MODULE_VERSION("0.1");            ///< A version number to inform users
 /*This global variable is being properly made visible to other kernel modules.*/
@@ -166,11 +167,11 @@ static ssize_t dev_write(struct file *filep,  char *buffer1, size_t len, loff_t 
      buffer = message;
      size_of_message = strlen(message);                 // store the length of the stored message
      printk(KERN_INFO "LKM_input_device_driver: Received %zu characters from the user\n", len);
-    //need to export the buffer
-   // buffer = message;
-    printk(KERN_INFO "LKM_input_device_driver: Message is %s\n", message);
-    printk(KERN_INFO "LKM_input_device_driver: Buffer is %s\n", buffer);
- return len;
+     //need to export the buffer
+     // buffer = message;
+     printk(KERN_INFO "LKM_input_device_driver: Message is %s\n", message);
+     printk(KERN_INFO "LKM_input_device_driver: Buffer is %s\n", buffer);
+     return len;
 }
 
 /** @brief The device release function that is called whenever the device is closed/released by

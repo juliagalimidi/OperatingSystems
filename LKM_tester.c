@@ -23,8 +23,35 @@ int main(){
    }
    printf("Type in a short string to send to the kernel module:\n");
    scanf("%[^\n]%*c", stringToSend);                // Read in a string (with spaces)
-   printf("Writing message to the device [%s].\n", stringToSend);
-   ret = write(fd1, stringToSend, strlen(stringToSend)); // Send the string to the LKM
+  // check for UCF
+   char *temp = strstr(stringToSend, "UCF");
+   int position;  
+   char *result = "";
+    if(temp != NULL)
+     {
+        position = temp - stringToSend;
+       int i;
+       for(i = 0; i < position; i++)
+       {
+          strcat(result, stringToSend[i]);
+       }
+
+      strcat(result, "Undefeated 2018 National Champions UCF");
+
+      for(i = position + 3; i  < strlen(stringToSend); i++)
+      {
+          strcat(result, stringToSend[i]);
+      }
+       strcpy(stringToSend,result);  
+     }
+
+ 
+
+
+
+  printf("Writing message to the device [%s].\n", stringToSend);
+  
+  ret = write(fd1, stringToSend, strlen(stringToSend)); // Send the string to the LKM
    if (ret < 0){
       perror("Failed to write the message to the device.");
       return errno;
