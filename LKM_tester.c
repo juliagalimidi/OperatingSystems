@@ -8,7 +8,7 @@
  
 #define BUFFER_LENGTH 256               ///< The buffer length (crude but fine)
 static char receive[BUFFER_LENGTH];     ///< The receive buffer from the LKM
- 
+#define replaceStrLen 40  // length of string to replace UCF with  
 int main(){
    int ret, fd1, fd2;
    char stringToSend[BUFFER_LENGTH];
@@ -24,12 +24,54 @@ int main(){
    printf("Type in a short string to send to the kernel module:\n");
    scanf("%[^\n]%*c", stringToSend);                // Read in a string (with spaces)
   
-    // check for UCF
+   // Check for UCF
    char *temp = strstr(stringToSend, "UCF");
-    int position;  
-    char result[strlen(stringToSend) + 40];
-     // If UCF is in the string
-     if(temp != NULL)
+   printf("checked for UCF\n");
+   int position;  
+   // Get amount of times ucf occurs
+   char* endTest;
+   char countStr[strlen(stringToSend)];
+   strcpy(countStr, stringToSend);
+   printf("string copied correctly\n");
+   int count = 0;
+   printf("Temp is %s\n", temp);
+   fflush(stdout);
+   while(temp != NULL)
+   {
+         printf("in loop! Getting count!\n");
+        fflush(stdout);
+	// Caluclate where UCF begins
+        position = temp - countStr; 
+        // Index where first string ends
+        int  posStart = position; 
+        // Index where last string starts
+        int  posEnd = posStart + 3;
+ 
+        // Get remaining string after UCF
+        endTest = countStr + posEnd; 
+
+        // Set string to send to be end string
+        strcpy(countStr, endTest);
+
+        // See if remaining string has string UCF in it
+        temp = strstr(countStr, "UCF");
+
+     count++;
+   }
+    printf("count string is %s\n", countStr);
+   printf("string to send is %s\n", stringToSend);
+
+   temp = strstr(stringToSend, "UCF");
+   printf("string to send is current %s\n", stringToSend);
+   // set result to be correct size
+   char result[strlen(stringToSend) + (replaceStrLen * count)];
+   int resultFound = 0;
+   if(count > 0)
+      resultFound = 1;
+   printf("time to format string: temp is %s\n", temp);
+fflush(stdout);
+ // If UCF is in the string
+     while(temp != NULL)
      {
         // Caluclate where UCF begins
         position = temp - stringToSend; 
@@ -42,45 +84,33 @@ int main(){
         char startStr[strlen(stringToSend) + 38];
         memset(startStr, '\0', sizeof(startStr));
         strncpy(startStr, stringToSend + 0, posStart);
-        char* endTest = stringToSend + posEnd; 
-       strcat(result, startStr);
-       strcat(result, "Undefeated 2018 National Campions UCF");
-       strcat(result, endTest);
-       printf("RESULT : %s\n", result);
+        printf("start string: %s \n", startStr);
+        // Get remaining string
+        endTest = stringToSend + posEnd; 
+       
+	// Copy start of string and UCF replacement
+     	strcat(result, startStr);
+        strcat(result, "Undefeated 2018 National Campions UCF");
+        
+        // Print what result currently is
+        printf("RESULT : %s\n", result);
+              
+        // Set string to send to be end string
+        strcpy(stringToSend, endTest);
+
+        // See if remaining string has string UCF in it
+        temp = strstr(stringToSend, "UCF");
+    }
+    
+    // Put remaining string after all UCF have been replaced
+  if(resultFound == 1)
+  {
+     printf("UCF WAS FOUND : RETURNING RESULT AS STRINGTOSEND FOR WRITE\n");
+     strcat(result, endTest);
+    printf("result is %s\n", result);
+   // Copy final result to strng to send
        strcpy(stringToSend, result);
-
-}
-//      strncpy(end, stringToSend + posEnd, strlen(stringToSend) - 1);
-//      printf("first half: %s\n", start);
-//     printf("last half : %s\n", end);
-/*	 int i;
-       printf("AT FOR LOOP\n");
-       for(i = 0; i < position; i++)
-       {
-	 printf("IN FIRST LOOP i = %d\n", i);
-fflush(stdout);          
-strcat(result, stringToSend[i]);
-printf("strcat completed\n");
-fflush(stdout);
-       }
-
-      strcat(result, "Undefeated 2018 National Champions UCF");
-
-      for(i = position + 3; i  < strlen(stringToSend); i++)
-      {
-          strcat(result, stringToSend[i]);
-      }
-       strcpy(stringToSend,result);
-*/  
-     // strcpy(stringToSend, "Undefeated 2017 National Campions UCF");
-    // char* test = strncpy(stringToSend, stringToSend + 0, position  - 0);
-//strcpy(stringToSend, test); 
-    // }
-
- 
-
-
-
+  }
   printf("Writing message to the device [%s].\n", stringToSend);
   
   ret = write(fd1, stringToSend, strlen(stringToSend)); // Send the string to the LKM
